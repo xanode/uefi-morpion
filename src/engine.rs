@@ -11,7 +11,7 @@ use embedded_graphics::{
 };
 use uefi_graphics::UefiDisplay;
 
-#[derive(PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 enum ItemState {
     Selected,
     Unselected,
@@ -24,11 +24,13 @@ pub enum ItemSymbol {
     Empty,
 }
 
+#[derive(Clone)]
 struct StateFullItem {
     symbol: ItemSymbol,
     state: ItemState,
 }
 
+#[derive(Clone)]
 pub struct Engine {
     items: Vec<StateFullItem>,
 }
