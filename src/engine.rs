@@ -118,6 +118,30 @@ impl Engine {
         self.items[index].symbol = symbol;
     }
 
+    pub fn win(&self) -> ItemSymbol {
+        // Check the rows
+        for row in 0..3 {
+            if self.items[row * 3].symbol == self.items[row * 3 + 1].symbol && self.items[row * 3].symbol == self.items[row * 3 + 2].symbol {
+                return self.items[row * 3].symbol;
+            }
+        }
+        // Check the columns
+        for column in 0..3 {
+            if self.items[column].symbol == self.items[column + 3].symbol && self.items[column].symbol == self.items[column + 6].symbol {
+                return self.items[column].symbol;
+            }
+        }
+        // Check the diagonals
+        if self.items[0].symbol == self.items[4].symbol && self.items[0].symbol == self.items[8].symbol {
+            return self.items[0].symbol;
+        }
+        if self.items[2].symbol == self.items[4].symbol && self.items[2].symbol == self.items[6].symbol {
+            return self.items[2].symbol;
+        }
+        // No win
+        ItemSymbol::Empty
+    }
+
     fn draw_items(&self, width: u32, height: u32, display: &mut UefiDisplay) {
         // Set default color
         let default_color = Rgb888::new(119, 185, 242);
