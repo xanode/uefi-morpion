@@ -118,6 +118,16 @@ impl Engine {
         self.items[index].symbol = symbol;
     }
 
+    pub fn get_empty_items(&self) -> Vec<usize> {
+        let mut empty_items = Vec::new();
+        for (index, item) in self.items.iter().enumerate() {
+            if item.symbol == ItemSymbol::Empty {
+                empty_items.push(index);
+            }
+        }
+        empty_items
+    }
+
     pub fn win(&self) -> ItemSymbol {
         // Check the rows
         for row in 0..3 {
