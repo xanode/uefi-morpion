@@ -1,6 +1,7 @@
 #![no_main]
 #![no_std]
 #![feature(abi_efiapi)]
+#![allow(stable_features)]
 
 use uefi::prelude::*;
 use uefi::proto::console::{
@@ -109,6 +110,11 @@ fn main(_image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
             );
             engine.draw(width as u32, height as u32, display);
             drawn = true;
+        }
+        // Stop if someone won
+        if engine.check_win() {
+            system_table.boot_services().stall(10_000_000);
+            break;
         }
     };
     Status::SUCCESS
