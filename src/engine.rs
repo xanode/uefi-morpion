@@ -89,24 +89,6 @@ impl Engine {
         self.items[index].state = ItemState::Selected;
     }
 
-    fn get_selected_item(&self) -> Option<&StateFullItem> {
-        for item in self.items.iter() {
-            if item.state == ItemState::Selected {
-                return Some(item);
-            }
-        }
-        None
-    }
-
-    fn get_selected_item_index(&self) -> Option<usize> {
-        for (index, item) in self.items.iter().enumerate() {
-            if item.state == ItemState::Selected {
-                return Some(index);
-            }
-        }
-        None
-    }
-
     pub fn get_selected_item_symbol(&self) -> Option<ItemSymbol> {
         for item in self.items.iter() {
             if item.state == ItemState::Selected {
@@ -152,6 +134,10 @@ impl Engine {
         }
         // No win
         ItemSymbol::Empty
+    }
+
+    pub fn check_win(&self) -> bool {
+        self.win() != ItemSymbol::Empty
     }
 
     fn draw_items(&self, width: u32, height: u32, display: &mut UefiDisplay) {
