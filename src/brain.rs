@@ -3,13 +3,12 @@ use crate::engine::{
 };
 
 fn evaluate(engine: &Engine, player: ItemSymbol) -> i32 {
-    if let winning_symbol = engine.win() {
-        if winning_symbol == player {
-            return 1; // Win
-        }
-        if winning_symbol == ItemSymbol::Empty {
-            return 0; // Draw
-        }
+    let winning_symbol = engine.win();
+    if winning_symbol == player {
+        return 1; // Win
+    }
+    if winning_symbol == ItemSymbol::Empty {
+        return 0; // Draw
     }
     -1 // Loss
 }
@@ -19,7 +18,7 @@ fn compute_score(engine: &mut Engine, player: ItemSymbol, depth: u8, mut alpha: 
         return evaluate(engine, ItemSymbol::X);
     }
 
-    let mut best_score: i32 = if player == ItemSymbol::X { -1000 } else { 1000 };
+    let mut best_score: i32 = if player == ItemSymbol::X { i32::MIN } else { i32::MAX };
 
     for index in engine.get_empty_items() {
         let mut engine_clone = engine.clone();
@@ -49,8 +48,8 @@ fn compute_score(engine: &mut Engine, player: ItemSymbol, depth: u8, mut alpha: 
 
 pub fn compute_best_move(engine: &mut Engine, player: ItemSymbol, depth: u8) -> usize {
     let mut best_score = match player {
-        ItemSymbol::X => -1000,
-        ItemSymbol::O => 1000,
+        ItemSymbol::X => i32::MIN,
+        ItemSymbol::O => i32::MAX,
         _ => unreachable!(),
     };
     let mut best_move = 0;
@@ -58,7 +57,7 @@ pub fn compute_best_move(engine: &mut Engine, player: ItemSymbol, depth: u8) -> 
     for index in engine.get_empty_items() {
         let mut engine_clone = engine.clone();
         engine_clone.set_item_symbol(index, player);
-        let score = compute_score(&mut engine_clone, player, depth - 1, -1000, 1000);
+        let score = compute_score(&mut engine_clone, player, depth - 1, i32::MIN, i32::MAX);
 
         if (player == ItemSymbol::X && score > best_score) || (player == ItemSymbol::O && score < best_score) {
             best_score = score;
